@@ -8,6 +8,7 @@
   <body>
     <div id="app"> <!-- 説明 2.1 -->
       <p>{{ message }}</p> <!-- 説明 2.2 -->
+      <p>{{ message2 }}</p>
     </div>
 
     <script>
@@ -15,7 +16,8 @@
         el: "#app", // 説明 2.4
         data() { // 説明 2.5
           return {
-            message: "Hello Vue!"
+            message: "Hello Vue!",
+            message2: "Vue!"
           };
         }
       });
