@@ -9,6 +9,7 @@
     <div id="app"> <!-- 説明 2.1 -->
       <p>{{ message }}</p> <!-- 説明 2.2 -->
       <p>{{ message2 }}</p>
+      <button @click="changeMsg">Change</button>
     </div>
 
     <script>
@@ -19,6 +20,17 @@
             message: "Hello Vue!",
             message2: "Vue!"
           };
+        },
+        mounted () {  // 説明 2.7
+          this.setMsg();  // 説明 2.8
+        },
+        methods: { // 説明 2.9
+          setMsg: function () { // 説明 2.10
+            this.message = 'Set Message'; // 説明 2.11
+          },
+          changeMsg: function(){
+            this.message = 'Changed Message'
+          }
         }
       });
     </script>
