@@ -11,6 +11,10 @@
       <p>{{ message }}</p> <!-- 説明 2.2 -->
       <p>{{ message2 }}</p>
       <button @click="changeMsg">Change</button>
+      <ul>
+        <li v-for="data in list">{{ data.title }}</li>
+      </ul>
+      <button v-on:click="listSnippet">listSnippet</button> <!-- 説明 2.20 -->
     </div>
 
     <script>
@@ -32,7 +36,18 @@
           },
           changeMsg: function(){
             this.message = 'Changed Message'
-            this.message2 = this.list[0]['title'] // 説明 2.15
+            axios.get('/snippets.json') // 説明 2.16
+            .then(response => ( // 説明 2.17
+                this.message2 = response.data[0]['title'] // 説明 2.18
+              )
+            )
+          },
+          listSnippet: function(){
+            axios.get('/snippets.json')
+              .then(response => (
+                this.list = response.data
+                )
+              );
           }
         }
       });
