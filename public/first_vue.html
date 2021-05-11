@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Snippet App</title>
   </head>
   <body>
@@ -18,7 +19,8 @@
         data() { // 説明 2.5
           return {
             message: "Hello Vue!",
-            message2: "Vue!"
+            message2: "Vue!",
+            list: [{title:'title1'}, {title:'title2'}] // 説明 2.14
           };
         },
         mounted () {  // 説明 2.7
@@ -30,6 +32,7 @@
           },
           changeMsg: function(){
             this.message = 'Changed Message'
+            this.message2 = this.list[0]['title'] // 説明 2.15
           }
         }
       });
