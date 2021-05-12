@@ -15,6 +15,7 @@
         <li v-for="data in list">{{ data.title }}</li>
       </ul>
       <button v-on:click="listSnippet">listSnippet</button> <!-- 説明 2.20 -->
+      <button @click="postSnippet">postSnippet</button>
     </div>
 
     <script>
@@ -46,6 +47,13 @@
             axios.get('/snippets.json')
               .then(response => (
                 this.list = response.data
+                )
+              );
+          },
+          postSnippet: function(){
+            axios.post('/snippets.json', {title: 'new title', language: 'Ruby', content: 'contents'})
+              .then(response => (
+                this.listSnippet()
                 )
               );
           }
