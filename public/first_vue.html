@@ -14,7 +14,12 @@
       <ul>
         <li v-for="data in list">{{ data.title }}</li>
       </ul>
-      <button v-on:click="listSnippet">listSnippet</button> <!-- 説明 2.20 -->
+      <button v-on:click="listSnippet">listSnippet</button>
+      <div>
+        <input v-model="title" placeholder="title"> <!-- 説明 2.23 -->
+        <input v-model="language" placeholder="language">
+        <input v-model="contents" placeholder="contents">
+      </div>
       <button @click="postSnippet">postSnippet</button>
     </div>
 
@@ -25,7 +30,10 @@
           return {
             message: "Hello Vue!",
             message2: "Vue!",
-            list: [{title:'title1'}, {title:'title2'}] // 説明 2.14
+            list: [{title:'title1'}, {title:'title2'}],
+            title: 'new title',
+            language: 'Ruby',
+            contents: 'contents'
           };
         },
         mounted () {  // 説明 2.7
