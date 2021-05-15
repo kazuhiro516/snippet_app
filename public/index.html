@@ -28,8 +28,8 @@
             </div>
           </v-flex>
           <v-flex xs7> <!-- 説明 3.9 -->
-            <v-card style="margin-top:10px"> <!-- 説明 3.11 -->
-              <v-card-title primary-title> <!-- 説明 3.11 -->
+            <v-card style="margin-top:10px" v-for="snippet in snippetList">
+              <v-card-title primary-title>
                 <h3 class="headline">Snippet Title</h3>
               </v-card-title>
               <div style="margin: 10px 20px;">
@@ -51,7 +51,7 @@
         el: '#app',
         data () {
           return {
-
+            snippetList: ['',''],
           }
         },
         mounted () {
