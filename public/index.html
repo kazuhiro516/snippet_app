@@ -39,7 +39,7 @@
 
               <v-card-actions> <!-- 説明 3.13 -->
                 <v-btn flat color="red" v-on:click="togglePutModal(snippet.id)">Update</v-btn>
-                <v-btn flat color="gray">Delete</v-btn>
+                <v-btn flat color="gray" v-on:click="toggleDeleteModal()">Delete</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -81,7 +81,7 @@
             <v-card-title class="headline red lighten-3 white--text" primary-title>
               Edit Form
             </v-card-title>
-    
+
             <v-text-field v-model="putTitle" label="Snippet Title" required style='margin:20px; margin-top:30px'></v-text-field>
             <v-flex d-flex>
               <v-text-field v-model="putLanguage" label="Language" required style='margin:20px; margin-bottom:0px; margin-left:20px'></v-text-field>
