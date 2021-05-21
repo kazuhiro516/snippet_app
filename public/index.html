@@ -2,26 +2,32 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet"> <!-- 説明 3.1 -->
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.5/dist/vuetify.min.css" rel="stylesheet"> <!-- 説明 3.2 -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.5/dist/vuetify.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.5/dist/vuetify.js"></script> <!-- 説明 3.3 -->
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.5/dist/vuetify.js"></script>
 
     <title>Snippet App</title>
   </head>
   <body>
     <v-app id="app">
-      <v-toolbar color="red lighten-3" dark> <!-- 説明 3.4 -->
-        <v-toolbar-title>Snippet App</v-toolbar-title> <!-- 説明 3.5 -->
-        <v-spacer></v-spacer> <!-- 説明 3.6 -->
+      <v-toolbar color="red lighten-3" dark>
+        <v-toolbar-title>Snippet App</v-toolbar-title>
+        <v-spacer></v-spacer>
         <v-btn flat v-on:click="togglePostModal()">New Snippet</v-btn>
-        <v-btn flat>New Snippet</v-btn> <!-- 説明 3.7 -->
+        <v-btn flat>New Snippet</v-btn>
       </v-toolbar>
-      <v-container style="height: 1000px; max-width: 2400px;"> <!-- 説明 3.8 -->
-        <v-layout> <!-- 説明 3.9 -->
-          <v-flex xs5> <!-- 説明 3.9 -->
-            <div style="margin:10px"> <!-- 説明 3.10 -->
+      <v-container style="height: 1000px; max-width: 2400px;">
+        <v-layout>
+          <v-flex xs5>
+            <div style="margin:10px">
+
+              <!-- 言語の絞り込み機能 -->
+              <h2>Select Language</h2>
+              <v-select v-model='language' :items="languages" label="Language" v-on:change="abstruct"></v-select>
+
+              <!-- スニペット一覧 -->
               <h2>Snippets Shortcut</h2>
               <ul>
                 <li v-for="snippet in snippetList"><span id='name' v-on:click="goElem(snippet.id)">
@@ -30,7 +36,7 @@
               </ul>
             </div>
           </v-flex>
-          <v-flex xs7> <!-- 説明 3.9 -->
+          <v-flex xs7>
             <v-card style="margin-top:10px" v-for="snippet in snippetList">
               <v-card-title primary-title>
                 <a v-bind:id='snippet.id'></a>
@@ -40,7 +46,7 @@
                 <textarea style='width:100%; height:300px; background-color:#efefef; padding:3px'> {{ snippet.contents }} </textarea>
               </div>
 
-              <v-card-actions> <!-- 説明 3.13 -->
+              <v-card-actions>
                 <v-btn flat color="red" v-on:click="togglePutModal(snippet.id)">Update</v-btn>
                 <v-btn flat color="gray" v-on:click="toggleDeleteModal(snippet.id)">Delete</v-btn>
                 <v-spacer></v-spacer>
@@ -51,19 +57,20 @@
         </v-layout>
 
         <!-- モーダル -->
-        <v-dialog v-model="dialogPostFlag" width="800" persistent> <!-- 説明 3.18 -->
+        <v-dialog v-model="dialogPostFlag" width="800" persistent>
           <v-card>
             <v-card-title class="headline red lighten-3 white--text" primary-title>
               Create Form
             </v-card-title>
-            <v-text-field v-model="postTitle" label="Snippet Title" required style='margin:20px; margin-top:30px'></v-text-field> <!-- 説明 3.19 -->
+            <v-text-field v-model="postTitle" label="Snippet Title" required style='margin:20px; margin-top:30px'></v-text-field>
             <v-flex d-flex>
               <v-text-field v-model="postLanguage" label="Language" required style='margin:20px; margin-bottom:0px; margin-left:20px'></v-text-field>
-            </v-flex> <!-- 説明 3.19 -->
+              <v-select v-model='postLanguage' :items="languagesForEdit" label="Select from history" style='margin:20px; margin-bottom:0px;margin-left: 0px'></v-select>
+            </v-flex>
             <v-card-text>
               <p>Snippet</p>
               <div style='width:100%;'>
-                <textarea style='width:100%; height:300px; background-color:#efefef; padding:3px' v-model='postContents'></textarea> <!-- 説明 3.19 -->
+                <textarea style='width:100%; height:300px; background-color:#efefef; padding:3px' v-model='postContents'></textarea>
               </div>
             </v-card-text>
              <v-divider></v-divider>
@@ -144,6 +151,9 @@
           return {
             snippetList: ['',''],
             allData: ['',''],
+            languages: ['All'],
+            languagesForEdit: [],
+            language: 'ALL',
             dialogPostFlag: false,
             postTitle: '',
             postLanguage: '',
@@ -159,13 +169,26 @@
           this.listSnippet();
         },
         methods: {
-          listSnippet: function() { // 説明 3.17
+          listSnippet: function() {
             axios.get('/snippets.json')
               .then(response => {
                 this.allData = response.data
                 this.snippetList = this.allData
+                this.listLanguages();
+                this.abstruct();
               }
             );
+          },
+          listLanguages: function() {
+            this.languages = []
+            this.languagesForEdit = []
+            this.languages.push('ALL')
+            for (i=0;i<this.allData.length;i++) {
+              if (this.languages.indexOf(this.allData[i].language) == -1) {
+                this.languages.push(this.allData[i].language)
+                this.languagesForEdit.push(this.allData[i].language)
+              }
+            }
           },
           togglePostModal: function() {
             this.dialogPostFlag = !this.dialogPostFlag
@@ -173,14 +196,14 @@
           postSnippet: function() {
             axios.post('/snippets.json', {title:this.postTitle, language:this.postLanguage, contents:this.postContents})
               .then(response => {
-                this.listSnippet();  // 説明 3.21
+                this.listSnippet();
                 this.postTitle = ''
                 this.postLanguage = ''
                 this.postContents = ''
               }
             );
 
-            this.dialogPostFlag = !this.dialogPostFlag // 説明 3.22
+            this.dialogPostFlag = !this.dialogPostFlag
           },
           togglePutModal: function(id) {
             axios.get('/snippets/' + id + '.json')
@@ -219,6 +242,21 @@
           },
           goTop: function() {
             document.getElementById("app").scrollIntoView(true)
+          },
+          abstruct: function() {
+            if (this.language == 'ALL') {
+              this.snippetList = []
+              for (i=0;i<this.allData.length;i++) {
+                this.snippetList.push(this.allData[i])
+              }
+            } else if (this.language != '') {
+              this.snippetList = []
+              for (i=0;i<this.allData.length;i++) {
+                if (this.allData[i].language == this.language) {
+                  this.snippetList.push(this.allData[i])
+                }
+              }
+            }
           }
         }
       })
